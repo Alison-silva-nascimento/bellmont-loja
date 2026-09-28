@@ -4,3 +4,5 @@ dist/
 .DS_Store
 qa-*.png
 src/assets/originals/
+vite.config.js
+vite.config.d.ts
