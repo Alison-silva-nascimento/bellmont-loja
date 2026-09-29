@@ -326,3 +326,80 @@ p, h1, h2, h3 { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
+
+/* Mobile experience audit: compact sections and horizontal discovery */
+@media (max-width: 600px) {
+  .campaigns, .new-drop { padding-top:4rem; padding-bottom:4rem; }
+  .section-intro { margin-bottom:2.25rem; padding-bottom:1.25rem; }
+  .section-intro p { font-size:1.6rem; }
+  .campaign, .campaign--2 { margin-bottom:4rem; }
+  .campaign .image-stage { min-height:0; aspect-ratio:1 / 1; }
+  .campaign__copy { padding-top:1.5rem; }
+  .campaign__copy p { margin-bottom:1.5rem; }
+
+  .new-drop__filters { scroll-snap-type:x mandatory; scrollbar-width:none; margin-right:-1.25rem; padding-right:1.25rem; }
+  .new-drop__filters::-webkit-scrollbar { display:none; }
+  .new-drop__filters button { flex:0 0 52vw; min-width:0; scroll-snap-align:start; }
+
+  .product-grid,
+  .new-drop .product-grid {
+    display:flex;
+    gap:1rem;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    padding:0 1.25rem 2rem;
+    scroll-padding-left:1.25rem;
+  }
+  .product-grid::-webkit-scrollbar { display:none; }
+  .product-grid .product-card { flex:0 0 82vw; scroll-snap-align:start; }
+  .new-drop .product-grid { margin-left:-1.25rem; margin-right:-1.25rem; }
+  .product-card__info { padding-top:.8rem; }
+  .listing-page .product-grid { padding-top:3rem; }
+
+  .brand-worlds { padding-top:4.5rem; padding-bottom:4.5rem; overflow:hidden; }
+  .brand-worlds > header { margin-bottom:2.5rem; gap:1rem; }
+  .brand-worlds__grid {
+    display:flex;
+    gap:1rem;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    margin-right:-1.25rem;
+    padding-right:1.25rem;
+  }
+  .brand-worlds__grid::-webkit-scrollbar { display:none; }
+  .brand-world { flex:0 0 84vw; min-height:58vh; scroll-snap-align:start; }
+  .brand-world h3 { font-size:2.25rem; }
+
+  .site-footer { padding:3.5rem 1.25rem 1.5rem; overflow:hidden; }
+  .footer-top { padding-bottom:2rem; }
+  .footer-top .brand-mark { font-size:2.2rem; }
+  .footer-grid {
+    display:flex;
+    gap:1rem;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    padding:2.5rem 0;
+  }
+  .footer-grid::-webkit-scrollbar { display:none; }
+  .footer-grid > div {
+    flex:0 0 58vw;
+    min-height:150px;
+    padding:1.1rem;
+    border:1px solid #292929;
+    scroll-snap-align:start;
+  }
+  .footer-bottom { flex-direction:row; flex-wrap:wrap; justify-content:space-between; align-items:center; padding-top:1.25rem; }
+  .developer-credit { order:3; flex:0 0 100%; }
+
+  .editorial { min-height:0; padding-top:4rem; padding-bottom:4rem; }
+  .editorial__lead .image-stage { height:auto; aspect-ratio:4 / 5; }
+  .manifesto { min-height:60vh; }
+  .fit-manifesto { padding-top:4.5rem; padding-bottom:4.5rem; }
+  .fit-editorial img { height:58vh; }
+  .fit-final { min-height:55vh; }
+  .page-hero { min-height:40vh; padding-top:8rem; padding-bottom:3.5rem; }
+}
