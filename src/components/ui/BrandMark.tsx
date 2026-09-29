@@ -10,5 +10,5 @@ export function BrandMark({ light = false, brand = 'bellmont' }: BrandMarkProps)
   const label = isImperioFit ? 'IMPÉRIO FIT' : 'BELLMONT'
   const destination = isImperioFit ? '/imperio-fit' : '/'
 
-  return <Link className={`brand-mark${isImperioFit ? ' brand-mark--imperio' : ''}${light ? ' is-light' : ''}`} to={destination} aria-label={`${label} — início`}>{label}</Link>
+  return <Link className={`brand-mark${isImperioFit ? ' brand-mark--imperio' : ''}${light ? ' is-light' : ''}`} to={destination} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label={`${label} — voltar ao início`}>{label}</Link>
 }
