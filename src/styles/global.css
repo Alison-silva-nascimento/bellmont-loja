@@ -91,9 +91,15 @@ p, h1, h2, h3 { margin-top: 0; }
 .campaign--3 .image-stage img { object-position:center top; }
 .campaign__copy { min-width:0; padding:4vw; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
 .campaign__copy > span { color:var(--muted); font-size:.68rem; }
-.campaign__copy h2 { font:400 clamp(2.9rem,4.6vw,5.8rem)/.92 var(--display); letter-spacing:.035em; margin:2rem 0 .55rem; }
-.campaign__lockup { margin-bottom:1.5rem; }
-.campaign__lockup strong { display:block; color:var(--accent); font-size:.68rem; letter-spacing:.28em; font-weight:600; }
+.campaign-logo { display:flex; align-items:center; gap:1.2rem; margin:2rem 0 1.7rem; color:var(--ink); }
+.campaign-logo__mark { width:72px; height:72px; flex:0 0 72px; display:block; }
+.campaign-logo__mark svg { width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.campaign-logo__mark .campaign-logo__fill { fill:currentColor; stroke:none; }
+.campaign-logo__mark .campaign-logo__accent { stroke:var(--accent); stroke-width:2.2; }
+.campaign-logo__wordmark { display:flex; flex-direction:column; min-width:0; }
+.campaign-logo__wordmark b { font:400 clamp(2.15rem,3.5vw,4rem)/.92 var(--display); letter-spacing:.07em; white-space:nowrap; }
+.campaign-logo__wordmark small { color:var(--accent); font-size:.64rem; letter-spacing:.28em; font-weight:600; margin-top:.55rem; }
+.campaign-logo--fitness .campaign-logo__wordmark b { font-size:clamp(1.85rem,3vw,3.5rem); }
 .campaign__copy p { color:var(--muted); margin-bottom:2.5rem; font-size:1rem; }
 .new-drop { background:#fff; padding:var(--space-7) 5vw; }
 .section-heading { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; }
@@ -258,7 +264,7 @@ p, h1, h2, h3 { margin-top: 0; }
   .campaign--2 .image-stage, .campaign--2 .campaign__copy { order:initial; }
   .campaign .image-stage { min-height:70vh; }
   .campaign__copy { padding:2rem 0 0; }
-  .campaign__copy h2 { margin:.8rem 0 .4rem; }
+  .campaign-logo { margin:.8rem 0 1.25rem; }
   .product-grid { grid-template-columns:repeat(2,minmax(0,1fr)); padding-left:1.25rem; padding-right:1.25rem; }
   .product-card__quick { transform:none; }
   .editorial { padding:6rem 1.25rem; grid-template-columns:1fr 1fr; }
@@ -359,6 +365,10 @@ p, h1, h2, h3 { margin-top: 0; }
   .campaign, .campaign--2 { margin-bottom:4rem; }
   .campaign .image-stage { min-height:0; aspect-ratio:1 / 1; }
   .campaign__copy { padding-top:1.5rem; }
+  .campaign-logo__mark { width:58px; height:58px; flex-basis:58px; }
+  .campaign-logo__wordmark b { font-size:2rem; }
+  .campaign-logo--fitness .campaign-logo__wordmark b { font-size:1.68rem; }
+  .campaign-logo__wordmark small { font-size:.58rem; letter-spacing:.22em; }
   .campaign__copy p { margin-bottom:1.5rem; }
 
   .new-drop__filters { scroll-snap-type:x mandatory; scrollbar-width:none; margin-right:-1.25rem; padding-right:1.25rem; }
