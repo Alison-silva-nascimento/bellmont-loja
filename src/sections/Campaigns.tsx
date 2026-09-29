@@ -6,7 +6,7 @@ import { asset } from '../utils/asset'
 
 const campaigns = [
   { index: '01', title: 'STREETWEAR', line: 'Volume. Forma. Identidade.', href: '/streetwear', tone: 'ink' as const, src: asset('catalog-streetwear-goku-black.png') },
-  { index: '02', title: 'IMPÉRIO FIT', line: 'Performance com identidade.', href: '/imperio-fit', tone: 'light' as const, src: asset('imperio-fit-burgundy.png') },
+  { index: '02', title: 'IMPÉRIO FIT', line: 'Performance com identidade.', href: '/imperio-fit', tone: 'light' as const, src: asset('imperio-fit-burgundy-editorial-v2.png') },
   { index: '03', title: 'PERFUMARIA', line: 'Uma presença que permanece.', href: '/perfumes', tone: 'amber' as const, src: asset('catalog-perfume-athena.png') },
 ]
 
