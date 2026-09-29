@@ -4,9 +4,15 @@ import { Reveal } from '../components/motion/Reveal'
 import { asset } from '../utils/asset'
 
 export function BrandWorlds() {
-  return <section className="brand-worlds"><header><span>O ECOSSISTEMA</span><h2>DUAS IDENTIDADES.<br /><em>UMA EXPERIÊNCIA.</em></h2></header><div className="brand-worlds__grid">
-    <Reveal className="brand-world brand-world--bellmont"><img src={asset('hero-streetwear-clean.png')} alt="Editorial streetwear BELLMONT" loading="lazy" /><div><span>BELLMONT</span><h3>Streetwear.<br />Perfumaria.<br />Lifestyle.</h3><Link to="/streetwear">Explorar BELLMONT <ArrowUpRight /></Link></div></Reveal>
-    <Reveal className="brand-world brand-world--fit" delay={.08}><img src={asset('imperio-fit-brand-editorial.png')} alt="Editorial fitness IMPÉRIO FIT com conjunto azul-marinho" loading="lazy" /><div><span>IMPÉRIO FIT</span><h3>Performance.<br />Movimento.<br />Fitness Style.</h3><Link to="/imperio-fit">Conhecer IMPÉRIO FIT <ArrowUpRight /></Link></div></Reveal>
-  </div></section>
+  return <section className="imperio-entry" aria-labelledby="imperio-entry-title">
+    <picture><source media="(max-width: 600px)" srcSet={asset('imperio-fit-brand-editorial.png')} /><img src={asset('imperio-fit-hero-editorial.png')} alt="Modelo vestindo look fitness IMPÉRIO FIT" loading="lazy" /></picture>
+    <div className="imperio-entry__shade" />
+    <Reveal className="imperio-entry__copy">
+      <span>IMPÉRIO FIT / FITNESS STYLE</span>
+      <h2 id="imperio-entry-title">FORÇA EM<br /><em>MOVIMENTO.</em></h2>
+      <p>Fitness / Performance / Style</p>
+      <Link className="button button--light" to="/imperio-fit">Conhecer Império Fit <ArrowUpRight /></Link>
+    </Reveal>
+  </section>
 }
 

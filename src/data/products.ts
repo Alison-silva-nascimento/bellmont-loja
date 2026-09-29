@@ -2,9 +2,9 @@ import type { Product } from '../types/product'
 import { asset } from '../utils/asset'
 
 export const products: Product[] = [
-  { id: 'street-01', brand: 'bellmont', slug: 'camiseta-oversized-goku-preta', name: 'Camiseta Oversized Goku — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-goku-black.png')], sizes: ['P', 'M', 'G', 'GG'], availability: 'unknown', featured: true, newArrival: true },
-  { id: 'street-02', brand: 'bellmont', slug: 'camiseta-oversized-goku-branca', name: 'Camiseta Oversized Goku — Branca', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-goku-white.png')], sizes: ['P', 'M', 'G', 'GG'], availability: 'unknown', featured: true },
-  { id: 'street-03', brand: 'bellmont', slug: 'camiseta-oversized-estampada', name: 'Camiseta Oversized Estampada — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-dragon-black.png')], sizes: ['P', 'M', 'G', 'GG'], availability: 'unknown', newArrival: true },
+  { id: 'street-01', brand: 'bellmont', slug: 'camiseta-oversized-goku-preta', name: 'Camiseta Oversized Caveira — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-goku-black.png')], availability: 'unknown', featured: true, newArrival: true },
+  { id: 'street-02', brand: 'bellmont', slug: 'camiseta-oversized-goku-branca', name: 'Camiseta Oversized Goku — Branca', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-goku-white.png')], availability: 'unknown', featured: true },
+  { id: 'street-03', brand: 'bellmont', slug: 'camiseta-oversized-estampada', name: 'Camiseta Oversized Estampada — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-dragon-black.png')], availability: 'unknown', newArrival: true },
   { id: 'street-04', brand: 'bellmont', slug: 'camiseta-lobo-preta', name: 'Camiseta Lobo — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-wolf.png')], availability: 'unknown', newArrival: true },
   { id: 'street-05', brand: 'bellmont', slug: 'camiseta-solo-leveling-preta', name: 'Camiseta Solo Leveling — Preta', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-solo-leveling.png')], availability: 'unknown', newArrival: true },
   { id: 'street-06', brand: 'bellmont', slug: 'camiseta-gohan-branca', name: 'Camiseta Gohan — Branca', category: 'streetwear', price: 80, images: [asset('catalog-streetwear-gohan.png')], availability: 'unknown', newArrival: true },
