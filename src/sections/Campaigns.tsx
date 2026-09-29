@@ -12,5 +12,5 @@ const campaigns = [
 ]
 
 export function Campaigns() {
-  return <section className="campaigns"><div className="section-intro"><span>MODA &amp; LIFESTYLE</span><p>TRÊS UNIVERSOS. DUAS MARCAS.</p></div>{campaigns.map((item, index) => <Reveal key={item.signature} className={`campaign campaign--${index + 1}`}><ImageStage src={item.src} alt={`Campanha ${item.category}`} tone={item.tone} label={`${item.index} / ${item.brand} ${item.signature}`} /><div className="campaign__copy"><span>{item.index}</span><CampaignLogo variant={item.logo} /><p>{item.line}</p><Link className="text-link" to={item.href}>Explorar <ArrowUpRight /></Link></div></Reveal>)}</section>
+  return <section className="campaigns"><div className="section-intro"><span>MODA &amp; LIFESTYLE</span><p>TRÊS UNIVERSOS. DUAS MARCAS.</p></div>{campaigns.map((item, index) => <Reveal key={item.signature} className={`campaign campaign--${index + 1}`}><ImageStage src={item.src} alt={`Campanha ${item.category}`} tone={item.tone} label={`${item.index} / ${item.category.toUpperCase()}`}><CampaignLogo variant={item.logo} onImage /></ImageStage><div className="campaign__copy"><span>{item.index}</span><h2>{item.category}</h2><p>{item.line}</p><Link className="text-link" to={item.href}>Explorar <ArrowUpRight /></Link></div></Reveal>)}</section>
 }

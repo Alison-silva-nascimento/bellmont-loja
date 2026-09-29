@@ -1,5 +1,6 @@
 type CampaignLogoProps = {
   variant: 'streetwear' | 'fitness' | 'fragrances'
+  onImage?: boolean
 }
 
 const identities = {
@@ -33,11 +34,11 @@ function BellmontFragranceMark() {
   </svg>
 }
 
-export function CampaignLogo({ variant }: CampaignLogoProps) {
+export function CampaignLogo({ variant, onImage = false }: CampaignLogoProps) {
   const identity = identities[variant]
   const Mark = variant === 'streetwear' ? BellmontStreetMark : variant === 'fitness' ? ImperioFitMark : BellmontFragranceMark
 
-  return <div className={`campaign-logo campaign-logo--${variant}`} aria-label={`${identity.brand} ${identity.signature}`}>
+  return <div className={`campaign-logo campaign-logo--${variant}${onImage ? ' campaign-logo--on-image' : ''}`} aria-label={`${identity.brand} ${identity.signature}`}>
     <span className="campaign-logo__mark"><Mark /></span>
     <span className="campaign-logo__wordmark">
       <b>{identity.brand}</b>
