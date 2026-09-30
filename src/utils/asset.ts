@@ -1,1 +1,1 @@
-export const asset = (filename: string) => `${import.meta.env.BASE_URL}assets/${filename}`
+export const asset = (filename: string) => `${import.meta.env?.BASE_URL ?? '/'}assets/${filename}`

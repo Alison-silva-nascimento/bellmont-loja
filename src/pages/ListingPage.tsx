@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { QuickView } from '../components/commerce/QuickView'
 import { ProductCard } from '../components/product/ProductCard'
-import { products } from '../data/products'
-import type { Product, ProductCategory } from '../types/product'
+import { brandLabels, categoryLabels, products } from '../data/products'
+import type { Product, ProductBrand, ProductCategory } from '../types/product'
 
 const titles: Record<string, { eyebrow: string; title: string; description: string }> = {
   streetwear: { eyebrow: 'BELLMONT / STREET', title: 'STREETWEAR', description: 'Silhuetas amplas. Presença sem esforço.' },
@@ -14,13 +14,25 @@ const titles: Record<string, { eyebrow: string; title: string; description: stri
 
 export function ListingPage({ category }: { category?: ProductCategory }) {
   const [selected, setSelected] = useState<Product | null>(null)
-  const key = category || 'produtos'; const copy = titles[key]
-  const items = useMemo(() => category ? products.filter(p => p.category === category) : products, [category])
-  return <div className="listing-page"><header className="page-hero"><p>{copy.eyebrow}</p><h1>{copy.title}</h1><span>{copy.description}</span></header>{items.length ? <div className="product-grid">{items.map(product => <ProductCard key={product.id} product={product} onQuickView={setSelected} />)}</div> : <div className="empty-state"><span>B</span><h2>Coleção em preparação</h2><p>Os produtos oficiais desta categoria serão apresentados em breve.</p></div>}<QuickView product={selected} onClose={() => setSelected(null)} /></div>
-}
-
-export function ProductPage() {
-  const { slug } = useParams(); const product = products.find(item => item.slug === slug)
-  if (!product) return <div className="empty-state page-spacer"><span>B</span><h1>Produto não encontrado</h1><p>Este item pode ter mudado ou ainda não está disponível.</p></div>
-  return <div className="product-page"><div className="product-page__image"><img src={product.images[0]} alt={product.name} /></div><div className="product-page__copy"><p className="eyebrow">{product.category}</p><h1>{product.name}</h1><p>Informações comerciais e disponibilidade serão confirmadas em breve.</p><button className="button button--dark" disabled>Disponibilidade a confirmar</button></div></div>
+  const [params, setParams] = useSearchParams()
+  const key = category || 'produtos'
+  const copy = titles[key]
+  const brand = params.get('marca') as ProductBrand | null
+  const selectedCategory = category || params.get('categoria') as ProductCategory | null
+  const sort = params.get('ordem') || 'featured'
+  const items = useMemo(() => {
+    const filtered = products.filter(product => (!brand || product.brand === brand) && (!selectedCategory || product.category === selectedCategory))
+    return [...filtered].sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name, 'pt-BR') : sort === 'price' ? (a.price ?? Number.POSITIVE_INFINITY) - (b.price ?? Number.POSITIVE_INFINITY) : Number(Boolean(b.featured)) - Number(Boolean(a.featured)))
+  }, [brand, selectedCategory, sort])
+  const updateParam = (name: string, value: string) => { const next = new URLSearchParams(params); if (value) next.set(name, value); else next.delete(name); setParams(next, { replace: true }) }
+  return <div className="listing-page">
+    <header className="page-hero"><p>{copy.eyebrow}</p><h1>{copy.title}</h1><span>{copy.description}</span></header>
+    <section className="catalog" aria-labelledby="catalog-count"><div className="catalog__toolbar"><p id="catalog-count" aria-live="polite">{items.length} {items.length === 1 ? 'produto' : 'produtos'}</p><div className="catalog__controls">
+      {!category && <label>Marca<select value={brand || ''} onChange={event => updateParam('marca', event.target.value)}><option value="">Todas</option>{Object.entries(brandLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>}
+      {!category && <label>Categoria<select value={selectedCategory || ''} onChange={event => updateParam('categoria', event.target.value)}><option value="">Todas</option>{Object.entries(categoryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>}
+      <label>Ordenar<select value={sort} onChange={event => updateParam('ordem', event.target.value)}><option value="featured">Destaques</option><option value="name">Nome</option><option value="price">Menor preço</option></select></label>
+    </div></div>
+    {items.length ? <div className="product-grid catalog-grid">{items.map(product => <ProductCard key={product.id} product={product} onQuickView={setSelected} />)}</div> : <div className="empty-state catalog__empty"><span>B</span><h2>Nenhum produto encontrado</h2><p>Ajuste os filtros para ver outros itens do catálogo.</p><button type="button" className="button button--dark" onClick={() => setParams({}, { replace: true })}>Limpar filtros</button></div>}</section>
+    <QuickView product={selected} onClose={() => setSelected(null)} />
+  </div>
 }

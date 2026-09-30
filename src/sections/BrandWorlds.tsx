@@ -11,7 +11,7 @@ export function BrandWorlds() {
       <span>IMPÉRIO FIT / FITNESS STYLE</span>
       <h2 id="imperio-entry-title">FORÇA EM<br /><em>MOVIMENTO.</em></h2>
       <p>Fitness / Performance / Style</p>
-      <Link className="button button--light" to="/imperio-fit">Conhecer Império Fit <ArrowUpRight /></Link>
+      <Link className="button button--light" to="/imperio-fit">Ver Império Fit <ArrowUpRight /></Link>
     </Reveal>
   </section>
 }

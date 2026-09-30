@@ -10,7 +10,7 @@ export function Campaigns() {
       <span>BELLMONT / OVERSIZED COLLECTION</span>
       <h2 id="street-campaign-title">PRESENÇA EM<br /><em>CADA VOLUME.</em></h2>
       <p>Modelagem ampla, visual direto e estampas que assumem o protagonismo.</p>
-      <Link className="button button--light" to="/streetwear">Explorar Streetwear <ArrowUpRight /></Link>
+      <Link className="button button--light" to="/streetwear">Ver Streetwear <ArrowUpRight /></Link>
     </Reveal>
   </section>
 }
