@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { products } from '../data/products.ts'
 import type { Product } from '../types/product.ts'
-import { addCartSelection, calculateCartCount, calculateCartSubtotal, getCartItemKey, removeCartItem, sanitizeStoredCart, setCartItemQuantity } from './cart.ts'
+import { addCartSelection, calculateCartCount, calculateCartSubtotal, getCartItemKey, isProductPurchasable, isPurchasable, removeCartItem, resolveSelectedVariant, sanitizeStoredCart, setCartItemQuantity } from './cart.ts'
 
 const purchasable: Product = {
   id: 'fixture-shirt',
@@ -26,10 +26,10 @@ const catalog = [purchasable]
 const selectionM = { productId: purchasable.id, selectedSize: 'M', selectedColor: 'Preta', variantId: 'fixture-m-black' }
 const selectionG = { productId: purchasable.id, selectedSize: 'G', selectedColor: 'Preta', variantId: 'fixture-g-black' }
 
-test('inventário oficial contém ST-01 a ST-13 por R$ 80 sem dados fictícios', () => {
+test('inventário oficial contém ST-01 a ST-20 por R$ 80 sem dados fictícios', () => {
   const streetwear = products.filter(product => product.category === 'streetwear')
-  assert.equal(streetwear.length, 13)
-  assert.deepEqual(streetwear.map(product => product.code), Array.from({ length: 13 }, (_, index) => `ST-${String(index + 1).padStart(2, '0')}`))
+  assert.equal(streetwear.length, 20)
+  assert.deepEqual(streetwear.map(product => product.code), Array.from({ length: 20 }, (_, index) => `ST-${String(index + 1).padStart(2, '0')}`))
   assert.ok(streetwear.every(product => product.price === 80))
   assert.ok(streetwear.every(product => !product.sizes?.length && !product.colors?.length && !product.variants?.length))
   assert.ok(streetwear.every(product => product.availability !== 'available'))
@@ -80,4 +80,26 @@ test('rejeita produto sem preço, indisponível e sem variante obrigatória', ()
   const missingVariant = addCartSelection([], { productId: purchasable.id, selectedSize: 'M', selectedColor: 'Preta' }, catalog)
   assert.equal(missingVariant.ok, false)
   if (!missingVariant.ok) assert.equal(missingVariant.reason, 'invalid-variant')
+})
+
+test('resolve a variante estável pela combinação de opções', () => {
+  const variantM = resolveSelectedVariant(purchasable, selectionM)
+  const variantG = resolveSelectedVariant(purchasable, selectionG)
+  assert.equal(variantM?.id, 'fixture-m-black')
+  assert.equal(variantG?.id, 'fixture-g-black')
+  assert.equal(resolveSelectedVariant(purchasable, { selectedSize: 'P', selectedColor: 'Preta' }), undefined)
+})
+
+test('centraliza purchasability e rejeita variante sem estoque', () => {
+  const availableVariant = resolveSelectedVariant(purchasable, selectionM)
+  assert.equal(isProductPurchasable(purchasable), true)
+  assert.equal(isPurchasable(purchasable, availableVariant), true)
+  const soldOut: Product = {
+    ...purchasable,
+    id: 'fixture-sold-out',
+    variants: [{ id: 'fixture-sold-out-m', size: 'M', color: 'Preta', stock: 0, available: true }],
+  }
+  assert.equal(isProductPurchasable(soldOut), false)
+  assert.equal(isPurchasable(soldOut, soldOut.variants![0]), false)
+  assert.equal(addCartSelection([], { productId: soldOut.id, selectedSize: 'M', selectedColor: 'Preta', variantId: 'fixture-sold-out-m' }, [soldOut]).ok, false)
 })

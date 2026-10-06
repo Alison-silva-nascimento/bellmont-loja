@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { products } from '../data/products'
+import { commerceCatalog } from '../data/commerceCatalog'
 import type { CartItem, CartSelection, ResolvedCartItem } from '../types/cart'
 import { addCartSelection, calculateCartCount, calculateCartSubtotal, CART_STORAGE_KEY, getCartItemKey, removeCartItem, resolveCart, sanitizeStoredCart, setCartItemQuantity } from '../utils/cart'
 
@@ -23,7 +23,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>(() => {
     try {
       const stored = window.localStorage.getItem(CART_STORAGE_KEY)
-      return sanitizeStoredCart(stored ? JSON.parse(stored) : [], products)
+      return sanitizeStoredCart(stored ? JSON.parse(stored) : [], commerceCatalog)
     } catch { return [] }
   })
   const [feedback, setFeedback] = useState<CartFeedback>(null)
@@ -34,9 +34,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback((selection: CartSelection) => {
     setItems(current => {
-      const result = addCartSelection(current, selection, products)
+      const result = addCartSelection(current, selection, commerceCatalog)
       if (result.ok) {
-        const product = products.find(item => item.id === selection.productId)
+        const product = commerceCatalog.find(item => item.id === selection.productId)
         setFeedback({ id: Date.now(), message: `${product?.name ?? 'Produto'} adicionado à sacola.` })
       }
       return result.items
@@ -46,13 +46,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const setQuantity = useCallback((key: string, quantity: number) => setItems(current => setCartItemQuantity(current, key, quantity)), [])
   const removeItem = useCallback((key: string) => setItems(current => removeCartItem(current, key)), [])
   const dismissFeedback = useCallback(() => setFeedback(null), [])
-  const resolvedItems = useMemo(() => resolveCart(items, products), [items])
+  const resolvedItems = useMemo(() => resolveCart(items, commerceCatalog), [items])
 
   const value = useMemo<CartValue>(() => ({
     items,
     resolvedItems,
     count: calculateCartCount(items),
-    subtotal: calculateCartSubtotal(items, products),
+    subtotal: calculateCartSubtotal(items, commerceCatalog),
     feedback,
     addItem,
     setQuantity,

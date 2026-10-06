@@ -7,9 +7,15 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "test": "tsx --test src/**/*.test.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset",
+    "supabase:test": "supabase test db",
+    "supabase:lint": "supabase db lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.117.2",
     "@vitejs/plugin-react": "latest",
     "framer-motion": "latest",
     "lucide-react": "latest",
@@ -21,6 +27,7 @@
   "devDependencies": {
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "supabase": "2.119.0",
     "tsx": "^4.23.15",
     "typescript": "latest"
   }

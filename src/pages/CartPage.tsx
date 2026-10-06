@@ -18,8 +18,8 @@ export function CartPage() {
     <div className="cart-layout">
       <div className="cart-items">
         {resolvedItems.map(item => <article className="cart-item" key={item.key}>
-          <Link className="cart-item__image" to={`/produto/${item.product.slug}`}><img src={item.product.images[0]} alt="" /></Link>
-          <div className="cart-item__info"><p>{item.product.code || 'BELLMONT'} · STREETWEAR</p><h2><Link to={`/produto/${item.product.slug}`}>{item.product.name}</Link></h2>
+          <Link className="cart-item__image" to={item.product.id.startsWith('dev-') ? '/sacola' : `/produto/${item.product.slug}`}><img src={item.product.images[0]} alt="" /></Link>
+          <div className="cart-item__info"><p>{item.product.code || 'BELLMONT'} · STREETWEAR</p><h2><Link to={item.product.id.startsWith('dev-') ? '/sacola' : `/produto/${item.product.slug}`}>{item.product.name}</Link></h2>
             {(item.selectedSize || item.selectedColor) && <dl>{item.selectedSize && <div><dt>Tamanho</dt><dd>{item.selectedSize}</dd></div>}{item.selectedColor && <div><dt>Cor</dt><dd>{item.selectedColor}</dd></div>}</dl>}
             <strong>{formatPrice(item.product.price!)}</strong>
           </div>

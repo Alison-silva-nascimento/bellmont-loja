@@ -6,3 +6,13 @@ qa-*.png
 src/assets/originals/
 vite.config.js
 vite.config.d.ts
+
+# Environment files may contain credentials. Commit examples only.
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Supabase local state and generated secrets.
+supabase/.branches/
+supabase/.temp/

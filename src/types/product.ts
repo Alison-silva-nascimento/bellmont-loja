@@ -5,6 +5,9 @@ export interface ProductVariant {
   id: string
   color?: string | null
   size?: string | null
+  volume?: string | null
+  options?: Record<string, string | null>
+  stock?: number | null
   available?: boolean | null
 }
 

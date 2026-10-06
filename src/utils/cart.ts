@@ -1,5 +1,5 @@
 import type { CartItem, CartMutationResult, CartRejectionReason, CartSelection, ResolvedCartItem } from '../types/cart'
-import type { Product } from '../types/product'
+import type { Product, ProductVariant } from '../types/product'
 
 export const CART_STORAGE_KEY = 'bellmont:cart:v1'
 export const CART_MAX_QUANTITY = 99
@@ -10,10 +10,29 @@ const catalogMap = (catalog: Product[]) => new Map(catalog.map(product => [produ
 export const getCartItemKey = ({ productId, variantId, selectedSize, selectedColor }: Pick<CartItem, 'productId' | 'variantId' | 'selectedSize' | 'selectedColor'>) =>
   [productId, variantId || '', selectedSize || '', selectedColor || ''].join('::')
 
+export const isVariantAvailable = (variant: ProductVariant) =>
+  variant.available === true && (variant.stock == null || (Number.isInteger(variant.stock) && variant.stock > 0))
+
+export function resolveSelectedVariant(product: Product, selection: Pick<CartSelection, 'variantId' | 'selectedSize' | 'selectedColor'>) {
+  if (!product.variants?.length) return undefined
+  const variantId = cleanOption(selection.variantId)
+  if (variantId) return product.variants.find(variant => variant.id === variantId)
+  const size = cleanOption(selection.selectedSize)
+  const color = cleanOption(selection.selectedColor)
+  return product.variants.find(variant => (!variant.size || variant.size === size) && (!variant.color || variant.color === color))
+}
+
+export const isProductPurchasable = (product: Product) =>
+  typeof product.price === 'number' && Number.isFinite(product.price) && product.price >= 0 && product.availability === 'available' &&
+  (!product.variants?.length || product.variants.some(isVariantAvailable))
+
+export const isPurchasable = (product: Product, variant?: ProductVariant) =>
+  isProductPurchasable(product) && (!product.variants?.length || Boolean(variant && product.variants.some(item => item.id === variant.id) && isVariantAvailable(variant)))
+
 export function validateCartSelection(product: Product | undefined, selection: CartSelection): CartRejectionReason | null {
   if (!product || product.id !== selection.productId) return 'invalid-product'
   if (typeof product.price !== 'number' || !Number.isFinite(product.price) || product.price < 0) return 'missing-price'
-  if (product.availability !== 'available') return 'unavailable-product'
+  if (!isProductPurchasable(product)) return 'unavailable-product'
 
   const selectedSize = cleanOption(selection.selectedSize)
   const selectedColor = cleanOption(selection.selectedColor)
@@ -21,17 +40,16 @@ export function validateCartSelection(product: Product | undefined, selection: C
   if (product.colors?.length && (!selectedColor || !product.colors.includes(selectedColor))) return 'missing-color'
 
   if (product.variants?.length) {
-    const variantId = cleanOption(selection.variantId)
-    const variant = product.variants.find(item => item.id === variantId)
-    if (!variant || variant.available !== true) return 'invalid-variant'
+    if (!cleanOption(selection.variantId)) return 'invalid-variant'
+    const variant = resolveSelectedVariant(product, selection)
+    if (!variant || !isPurchasable(product, variant)) return 'invalid-variant'
     if (variant.size && variant.size !== selectedSize) return 'invalid-variant'
     if (variant.color && variant.color !== selectedColor) return 'invalid-variant'
   }
   return null
 }
 
-export const isProductReadyForCart = (product: Product) =>
-  typeof product.price === 'number' && Number.isFinite(product.price) && product.availability === 'available'
+export const isProductReadyForCart = isProductPurchasable
 
 export function addCartSelection(items: CartItem[], selection: CartSelection, catalog: Product[]): CartMutationResult {
   const product = catalogMap(catalog).get(selection.productId)
