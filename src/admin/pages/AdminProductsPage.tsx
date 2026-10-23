@@ -6,7 +6,11 @@ import { listAdminProducts, type AdminProductListItem } from '../../services/adm
 type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; products: AdminProductListItem[] }
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 const statusLabel = { draft: 'Rascunho', active: 'Ativo', archived: 'Inativo' }
-const brandLabel: Record<string, string> = { bellmont: 'BELLMONT', 'imperio-fit': 'IMPÉRIO FIT' }
+const brandLabel: Record<string, string> = {
+  bellmont: 'BELLMONT', 'imperio-fit': 'IMPÉRIO FIT', lattafa: 'Lattafa',
+  'al-wataniah': 'Al Wataniah', armaf: 'Armaf', 'lattafa-pride': 'Lattafa Pride',
+  'maison-alhambra': 'Maison Alhambra',
+}
 
 export function AdminProductsPage() {
   const [state, setState] = useState<State>({ status: 'loading' })
@@ -28,9 +32,8 @@ export function AdminProductsPage() {
     {state.status === 'ready' && state.products.length > 0 && <div className="admin-products-table" role="region" aria-label="Produtos cadastrados" tabIndex={0}>
       <table><thead><tr><th>Código</th><th>Produto</th><th>Marca</th><th>Categoria</th><th>Preço</th><th>Status</th><th>Variantes</th><th><span className="sr-only">Ações</span></th></tr></thead>
       <tbody>{state.products.map(product => <tr key={product.id}>
-        <td data-label="Código">{product.code ?? '—'}</td><td data-label="Produto"><strong>{product.name}</strong><small>/{product.slug}</small></td><td data-label="Marca">{brandLabel[product.brand] ?? product.brand}</td><td data-label="Categoria">{product.category}</td><td data-label="Preço">{product.price === null ? 'Não informado' : money.format(product.price)}</td><td data-label="Status"><span className={`admin-status admin-status--${product.status}`}>{statusLabel[product.status]}</span></td><td data-label="Variantes">{product.variantCount}</td><td><Link to={`/admin/produtos/${product.id}`} aria-label={`Editar ${product.name}`}>Editar<ArrowRight aria-hidden="true" /></Link></td>
+        <td data-label="Código">{product.code ?? '—'}</td><td data-label="Produto"><strong>{product.name}</strong><small>/{product.slug}</small></td><td data-label="Marca">{product.brand ? brandLabel[product.brand] ?? product.brand : 'Fabricante não informado'}</td><td data-label="Categoria">{product.category}</td><td data-label="Preço">{product.price === null ? 'Não informado' : money.format(product.price)}</td><td data-label="Status"><span className={`admin-status admin-status--${product.status}`}>{statusLabel[product.status]}</span></td><td data-label="Variantes">{product.variantCount}</td><td><Link to={`/admin/produtos/${product.id}`} aria-label={`Editar ${product.name}`}>Editar<ArrowRight aria-hidden="true" /></Link></td>
       </tr>)}</tbody></table>
     </div>}
   </>
 }
-

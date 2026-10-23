@@ -5,17 +5,26 @@ import type { ProductRow, ProductVariantRow } from '../../lib/supabase/database.
 import { createAdminProduct, getAdminProduct, updateAdminProduct } from '../../services/adminProducts'
 import { AdminVariantSection } from '../components/AdminVariantSection'
 import { AdminProductImages } from '../components/AdminProductImages'
-import { ADMIN_BRANDS, ADMIN_CATEGORIES, ADMIN_PRODUCT_STATUSES, emptyProductForm, formatPriceInput, normalizeProductForm, slugifyProductName, type FieldErrors, type ProductFormValues } from '../domain/adminProductForm'
+import { ADMIN_BRANDS, ADMIN_CATEGORIES, ADMIN_PRODUCT_STATUSES, ADMIN_SALES_MODES, emptyProductForm, formatPriceInput, normalizeProductForm, slugifyProductName, type FieldErrors, type ProductFormValues } from '../domain/adminProductForm'
 
 type LoadState = { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready' }
-const brandLabels = { bellmont: 'BELLMONT', 'imperio-fit': 'IMPÉRIO FIT' }
+const brandLabels = {
+  bellmont: 'BELLMONT',
+  'imperio-fit': 'IMPÉRIO FIT',
+  lattafa: 'Lattafa',
+  'al-wataniah': 'Al Wataniah',
+  armaf: 'Armaf',
+  'lattafa-pride': 'Lattafa Pride',
+  'maison-alhambra': 'Maison Alhambra',
+}
 const categoryLabels = { streetwear: 'Streetwear', fitness: 'Fitness', perfumes: 'Perfumes' }
 const statusLabels = { draft: 'Rascunho', active: 'Ativo', archived: 'Inativo' }
+const salesModeLabels = { ASSISTED_PURCHASE: 'Compra assistida', INQUIRY_ONLY: 'Somente consulta', DISABLED: 'Comércio desabilitado' }
 
 const toForm = (product: ProductRow): ProductFormValues => ({
   code: product.code ?? '', name: product.name, slug: product.slug, description: product.description ?? '',
-  brand: product.brand as ProductFormValues['brand'], category: product.category as ProductFormValues['category'],
-  subcategory: product.subcategory ?? '', price: formatPriceInput(product.price), status: product.status, featured: product.featured,
+  brand: (product.brand ?? '') as ProductFormValues['brand'], category: product.category as ProductFormValues['category'],
+  subcategory: product.subcategory ?? '', price: formatPriceInput(product.price), status: product.status, salesMode: product.sales_mode, featured: product.featured,
 })
 
 export function AdminProductFormPage() {
@@ -77,10 +86,11 @@ export function AdminProductFormPage() {
           <Field label="Nome" required error={errors.name}><input value={values.name} onChange={e => set('name', e.target.value)} aria-invalid={!!errors.name} /></Field>
           <Field label="Slug" required hint="Não será alterado automaticamente após o cadastro." error={errors.slug}><input value={values.slug} onChange={e => set('slug', e.target.value)} aria-invalid={!!errors.slug} /></Field>
           <Field label="Preço" hint="Opcional, em BRL" error={errors.price}><input inputMode="decimal" placeholder="80,00" value={values.price} onChange={e => set('price', e.target.value)} aria-invalid={!!errors.price} /></Field>
-          <Field label="Marca" required error={errors.brand}><select value={values.brand} onChange={e => set('brand', e.target.value as ProductFormValues['brand'])}>{ADMIN_BRANDS.map(brand => <option key={brand} value={brand}>{brandLabels[brand]}</option>)}</select></Field>
+          <Field label="Fabricante" required={values.category !== 'perfumes'} error={errors.brand}><select value={values.brand} onChange={e => set('brand', e.target.value as ProductFormValues['brand'])}><option value="">Fabricante não informado</option>{ADMIN_BRANDS.map(brand => <option key={brand} value={brand}>{brandLabels[brand]}</option>)}</select></Field>
           <Field label="Categoria" required error={errors.category}><select value={values.category} onChange={e => set('category', e.target.value as ProductFormValues['category'])}>{ADMIN_CATEGORIES.map(category => <option key={category} value={category}>{categoryLabels[category]}</option>)}</select></Field>
           <Field label="Subcategoria"><input value={values.subcategory} onChange={e => set('subcategory', e.target.value)} /></Field>
           <Field label="Status" required error={errors.status}><select value={values.status} onChange={e => set('status', e.target.value as ProductFormValues['status'])}>{ADMIN_PRODUCT_STATUSES.map(status => <option key={status} value={status}>{statusLabels[status]}</option>)}</select></Field>
+          <Field label="Modalidade comercial" required error={errors.salesMode}><select value={values.salesMode} onChange={e => set('salesMode', e.target.value as ProductFormValues['salesMode'])}>{ADMIN_SALES_MODES.map(mode => <option key={mode} value={mode}>{salesModeLabels[mode]}</option>)}</select></Field>
           <Field label="Descrição" wide><textarea rows={6} value={values.description} onChange={e => set('description', e.target.value)} /></Field>
           <label className="admin-check admin-field--wide"><input type="checkbox" checked={values.featured} onChange={e => set('featured', e.target.checked)} /><span>Produto em destaque</span></label>
         </div>

@@ -1,23 +1,34 @@
 import type { Json } from '../../lib/supabase/database.types'
 
-export const ADMIN_BRANDS = ['bellmont', 'imperio-fit'] as const
+export const ADMIN_BRANDS = [
+  'bellmont',
+  'imperio-fit',
+  'lattafa',
+  'al-wataniah',
+  'armaf',
+  'lattafa-pride',
+  'maison-alhambra',
+] as const
 export const ADMIN_CATEGORIES = ['streetwear', 'fitness', 'perfumes'] as const
 export const ADMIN_PRODUCT_STATUSES = ['draft', 'active', 'archived'] as const
+export const ADMIN_SALES_MODES = ['ASSISTED_PURCHASE', 'INQUIRY_ONLY', 'DISABLED'] as const
 
 export type AdminBrand = typeof ADMIN_BRANDS[number]
 export type AdminCategory = typeof ADMIN_CATEGORIES[number]
 export type AdminProductStatus = typeof ADMIN_PRODUCT_STATUSES[number]
+export type AdminSalesMode = typeof ADMIN_SALES_MODES[number]
 
 export interface ProductFormValues {
   code: string
   name: string
   slug: string
   description: string
-  brand: AdminBrand
+  brand: AdminBrand | ''
   category: AdminCategory
   subcategory: string
   price: string
   status: AdminProductStatus
+  salesMode: AdminSalesMode
   featured: boolean
 }
 
@@ -33,7 +44,7 @@ export interface VariantFormValues {
 
 export const emptyProductForm = (): ProductFormValues => ({
   code: '', name: '', slug: '', description: '', brand: 'bellmont', category: 'streetwear',
-  subcategory: '', price: '', status: 'draft', featured: false,
+  subcategory: '', price: '', status: 'draft', salesMode: 'INQUIRY_ONLY', featured: false,
 })
 
 export const emptyVariantForm = (): VariantFormValues => ({
@@ -69,14 +80,16 @@ export const normalizeProductForm = (values: ProductFormValues) => {
   if (!slug) errors.slug = 'Informe o slug.'
   else if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) errors.slug = 'Use letras minúsculas, números e hífens.'
   if (price === undefined) errors.price = 'Informe um valor válido, com até duas casas decimais.'
-  if (!ADMIN_BRANDS.includes(values.brand)) errors.brand = 'Selecione uma marca válida.'
+  if (values.brand && !ADMIN_BRANDS.includes(values.brand)) errors.brand = 'Selecione uma marca válida.'
+  if (!values.brand && values.category !== 'perfumes') errors.brand = 'Informe a marca deste produto.'
   if (!ADMIN_CATEGORIES.includes(values.category)) errors.category = 'Selecione uma categoria válida.'
   if (!ADMIN_PRODUCT_STATUSES.includes(values.status)) errors.status = 'Selecione um status válido.'
+  if (!ADMIN_SALES_MODES.includes(values.salesMode)) errors.salesMode = 'Selecione uma modalidade válida.'
   if (Object.keys(errors).length) return { ok: false as const, errors }
   return { ok: true as const, data: {
-    code: optional(values.code), name, slug, description: optional(values.description), brand: values.brand,
+    code: optional(values.code), name, slug, description: optional(values.description), brand: values.brand || null,
     category: values.category, subcategory: optional(values.subcategory), price: price ?? null,
-    status: values.status, featured: values.featured,
+    status: values.status, sales_mode: values.salesMode, featured: values.featured,
   } }
 }
 
@@ -100,4 +113,3 @@ export const normalizeVariantForm = (values: VariantFormValues) => {
     price_override: priceOverride ?? null, options, is_active: values.isActive,
   } }
 }
-

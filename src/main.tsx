@@ -4,6 +4,7 @@ import { HashRouter } from 'react-router-dom'
 import App from './App'
 import { CartProvider } from './context/CartContext'
 import { FavoritesProvider } from './context/FavoritesContext'
+import { CatalogProvider } from './context/CatalogContext'
 import './styles/global.css'
 
-createRoot(document.getElementById('root')!).render(<StrictMode><HashRouter><FavoritesProvider><CartProvider><App /></CartProvider></FavoritesProvider></HashRouter></StrictMode>)
+createRoot(document.getElementById('root')!).render(<StrictMode><HashRouter><CatalogProvider><FavoritesProvider><CartProvider><App /></CartProvider></FavoritesProvider></CatalogProvider></HashRouter></StrictMode>)

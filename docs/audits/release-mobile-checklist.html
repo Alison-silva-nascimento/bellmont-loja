@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'">
+  <title>BELLMONT — Checklist de homologação</title>
+  <style>
+    :root{color-scheme:light;--ink:#111;--paper:#f4f1eb;--line:#c8c2b7;--ok:#176b3a;--bad:#a12620;--muted:#6b675f}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 Arial,sans-serif}header{background:#0b0b0b;color:#fff;padding:24px max(16px,calc((100vw - 1200px)/2))}h1{font-size:clamp(24px,5vw,46px);margin:0;text-transform:uppercase}header p{max-width:760px;color:#d7d7d7}.wrap{max-width:1200px;margin:auto;padding:20px 16px 60px}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.metric{background:#fff;border:1px solid var(--line);padding:14px}.metric strong{display:block;font-size:24px}.controls{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}.controls button{border:1px solid #111;background:#111;color:#fff;padding:11px 14px;font-weight:700;cursor:pointer}.controls button.secondary{background:#fff;color:#111}.note{background:#fff7cf;border:1px solid #d5bd4a;padding:12px}.viewport{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.viewport label{background:#fff;border:1px solid var(--line);padding:8px 10px}table{width:100%;border-collapse:collapse;background:#fff}th,td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}th{background:#e4dfd6}.status{display:grid;gap:5px;min-width:135px}.status label{white-space:nowrap}.obs{width:100%;min-height:58px;resize:vertical}tr[data-state="approved"]{box-shadow:inset 5px 0 var(--ok)}tr[data-state="failed"]{box-shadow:inset 5px 0 var(--bad)}small{color:var(--muted)}@media(max-width:760px){.summary{grid-template-columns:repeat(2,1fr)}table,thead,tbody,tr,th,td{display:block}thead{position:absolute;left:-9999px}tr{border:1px solid var(--line);margin:12px 0}td{border:0;border-bottom:1px solid #e7e3dc}td:before{content:attr(data-label);display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:4px}.status{grid-template-columns:1fr}.controls button{flex:1 1 180px}}
+  </style>
+</head>
+<body>
+<header><h1>Homologação BELLMONT</h1><p>Checklist offline da Fase 05.W3B.6B.0. As marcações ficam somente neste navegador. Não envia dados, não acessa Supabase e não faz alterações no site.</p></header>
+<main class="wrap">
+  <p class="note"><strong>Antes de começar:</strong> abra o site local/produção autorizada, selecione cada viewport no DevTools e teste com catálogo Supabase após a ativação autorizada. Não aprove um item sem observar o resultado.</p>
+  <div class="viewport"><strong>Viewports obrigatórios:</strong><label><input type="checkbox" data-viewport="360x800"> 360×800</label><label><input type="checkbox" data-viewport="390x844"> 390×844</label><label><input type="checkbox" data-viewport="430x932"> 430×932</label><label><input type="checkbox" data-viewport="768x1024"> 768×1024</label><label><input type="checkbox" data-viewport="1440x900"> 1440×900</label></div>
+  <section class="summary" aria-live="polite"><div class="metric">Total<strong id="total">0</strong></div><div class="metric">Aprovados<strong id="approved">0</strong></div><div class="metric">Reprovados<strong id="failed">0</strong></div><div class="metric">Não testados<strong id="untested">0</strong></div></section>
+  <div class="controls"><button id="export-json">Exportar JSON</button><button id="export-csv">Exportar CSV</button><button id="clear" class="secondary">Limpar marcações</button></div>
+  <table><thead><tr><th>Página</th><th>Ação</th><th>Resultado esperado</th><th>Status</th><th>Observações</th></tr></thead><tbody id="items"></tbody></table>
+</main>
+<script>
+const tests=[
+['Home','Abrir a página e rolar do topo ao rodapé','Hero, campanhas e seções carregam sem espaço quebrado ou overflow lateral.'],
+['Home','Usar menu mobile e fechar','Menu abre, mantém foco utilizável e fecha sem travar a rolagem.'],
+['Home','Deslizar New Drop','Cards reais deslizam horizontalmente e abrem a PDP correta.'],
+['Home','Deslizar vitrine Perfumaria','Perfumes reais aparecem sem volume ou preço inventado.'],
+['Home','Abrir grupo oficial','Link abre nova aba e aponta somente para o grupo oficial.'],
+['Streetwear','Abrir listagem','20 produtos aparecem após ativação, com imagem, nome e R$ 80,00.'],
+['Streetwear','Buscar e ordenar','Busca/filtros/ordenação atualizam a grade sem duplicação.'],
+['Streetwear','Abrir Quick View','Modal cabe na tela, fecha corretamente e não bloqueia a rolagem depois.'],
+['Streetwear','Favoritar e recarregar','Favorito permanece após F5 e abre o mesmo produto.'],
+['Streetwear','Abrir PDP e selecionar tamanho','Somente variantes reais aparecem; seleção é clara.'],
+['Streetwear','Adicionar à sacola','Item, variante, quantidade e preço entram corretamente.'],
+['Streetwear','Aumentar quantidade','Limite de estoque/99 é respeitado e subtotal permanece correto.'],
+['Streetwear','Finalizar com BELLMONT','WhatsApp BELLMONT recebe apenas os itens BELLMONT; sacola não é limpa.'],
+['Perfumaria','Abrir listagem','22 perfumes aparecem após ativação, com imagens corretas.'],
+['Perfumaria','Abrir produto com preço','Preço confirmado é exibido e o CTA é consulta pelo WhatsApp.'],
+['Perfumaria','Abrir produto sem preço','Nenhum total é inventado; aparece consulta comercial.'],
+['Perfumaria','Validar PF-05/07/09/14/17/19/20/22','Nenhum volume é inventado e a ressalva não quebra o layout.'],
+['Perfumaria','Tentar adicionar à sacola','INQUIRY_ONLY nunca entra na sacola.'],
+['Perfumaria','Consultar pelo WhatsApp','Abre WhatsApp BELLMONT com nome e dados conhecidos.'],
+['IMPÉRIO FIT','Abrir página exclusiva','Cinco produtos IF-01…IF-05 aparecem com imagens corretas.'],
+['IMPÉRIO FIT','Validar Conjunto Jasmim','Nome, imagem marrom e R$ 240,00 estão corretos.'],
+['IMPÉRIO FIT','Abrir PDP/Quick View','CTA é consulta; não oferece compra direta.'],
+['IMPÉRIO FIT','Tentar adicionar à sacola','INQUIRY_ONLY nunca entra na sacola.'],
+['IMPÉRIO FIT','Consultar pelo WhatsApp','Abre exclusivamente o WhatsApp IMPÉRIO FIT.'],
+['Geral','Usar busca por nome/categoria/marca','Resultados corretos, estado vazio legível e retorno fácil.'],
+['Geral','Abrir filtros no celular','Painel não fica encoberto, pode rolar e fechar.'],
+['Geral','Testar sacola mista','Aparecem botões separados BELLMONT e IMPÉRIO FIT, sem item no número errado.'],
+['Geral','Recarregar com sacola preenchida','Itens válidos persistem e incompatíveis não viram compras.'],
+['Geral','Acessar /checkout','Em WHATSAPP_ONLY redireciona para a sacola.'],
+['Geral','Navegar com teclado','Foco é visível, botões/links funcionam e modal não prende foco incorretamente.'],
+['Geral','Simular loading/erro de catálogo','Mensagem é clara e nenhum draft vira fallback público.'],
+['Geral','Verificar console do navegador','Sem erros fatais, segredos, service role ou chamadas privilegiadas.'],
+['Geral','Repetir em todos os viewports','Sem overflow horizontal, botões encobertos ou áreas de toque pequenas.']
+];
+const key='bellmont-release-checklist-v1';
+let saved={items:{},viewports:{}};try{saved=JSON.parse(localStorage.getItem(key))||saved}catch{}
+const tbody=document.getElementById('items');
+tests.forEach((t,i)=>{const state=saved.items?.[i]||{status:'untested',notes:''};const tr=document.createElement('tr');tr.dataset.state=state.status;tr.innerHTML=`<td data-label="Página">${t[0]}</td><td data-label="Ação">${t[1]}</td><td data-label="Esperado">${t[2]}</td><td data-label="Status"><div class="status">${[['approved','Aprovado'],['failed','Reprovado'],['untested','Não testado']].map(([v,l])=>`<label><input type="radio" name="s${i}" value="${v}" ${state.status===v?'checked':''}> ${l}</label>`).join('')}</div></td><td data-label="Observações"><textarea class="obs" aria-label="Observações do teste ${i+1}">${state.notes||''}</textarea></td>`;tbody.appendChild(tr)});
+document.querySelectorAll('[data-viewport]').forEach(el=>{el.checked=!!saved.viewports?.[el.dataset.viewport]});
+function collect(){const items={};[...tbody.rows].forEach((tr,i)=>{items[i]={status:tr.querySelector('input:checked').value,notes:tr.querySelector('textarea').value.trim()}});const viewports={};document.querySelectorAll('[data-viewport]').forEach(el=>viewports[el.dataset.viewport]=el.checked);return{version:1,exportedAt:new Date().toISOString(),viewports,items}}
+function persist(){const data=collect();localStorage.setItem(key,JSON.stringify(data));[...tbody.rows].forEach((tr,i)=>tr.dataset.state=data.items[i].status);const vals=Object.values(data.items).map(x=>x.status);approved.textContent=vals.filter(x=>x==='approved').length;failed.textContent=vals.filter(x=>x==='failed').length;untested.textContent=vals.filter(x=>x==='untested').length;total.textContent=vals.length}
+document.addEventListener('change',persist);document.addEventListener('input',persist);
+function download(name,type,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+document.getElementById('export-json').onclick=()=>download('bellmont-homologacao.json','application/json',JSON.stringify(collect(),null,2));
+document.getElementById('export-csv').onclick=()=>{const d=collect();const esc=v=>'"'+String(v??'').replaceAll('"','""')+'"';const rows=[['pagina','acao','esperado','status','observacoes'],...tests.map((t,i)=>[...t,d.items[i].status,d.items[i].notes])];download('bellmont-homologacao.csv','text/csv;charset=utf-8','\ufeff'+rows.map(r=>r.map(esc).join(';')).join('\n'))};
+document.getElementById('clear').onclick=()=>{if(confirm('Limpar todas as marcações e observações locais?')){localStorage.removeItem(key);location.reload()}};
+persist();
+</script>
+</body>
+</html>

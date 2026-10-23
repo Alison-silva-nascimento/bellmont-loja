@@ -26,7 +26,7 @@ export function Header() {
         </nav>
       </div>
       <div className="header-mobile">
-        <button onClick={() => setMenuOpen(true)} aria-label="Abrir menu"><Menu /></button><BrandMark brand={isImperioFit ? 'imperio-fit' : 'bellmont'} light={overlay && !scrolled} /><div><Link to="/buscar" aria-label="Buscar"><Search /></Link><Link className="header-cart-icon" to="/sacola" aria-label={`Sacola${count ? `, ${count} itens` : ''}`}><ShoppingBag />{count > 0 && <span aria-hidden="true">{count}</span>}</Link></div>
+        <button onClick={() => setMenuOpen(true)} aria-label="Abrir menu"><Menu /></button><BrandMark brand={isImperioFit ? 'imperio-fit' : 'bellmont'} light={overlay && !scrolled} /><div><Link to="/buscar" aria-label="Buscar"><Search /></Link><Link to="/favoritos" aria-label="Favoritos"><Heart /></Link><Link className="header-cart-icon" to="/sacola" aria-label={`Sacola${count ? `, ${count} itens` : ''}`}><ShoppingBag />{count > 0 && <span aria-hidden="true">{count}</span>}</Link></div>
       </div>
     </header>
     <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />

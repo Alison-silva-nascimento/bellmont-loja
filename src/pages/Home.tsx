@@ -1,8 +1,6 @@
-import { Campaigns } from '../sections/Campaigns'
 import { FitnessHighlights, PerfumeEssentials } from '../sections/CategoryShowcase'
-import { FinalCta } from '../sections/FinalCta'
 import { Hero } from '../sections/Hero'
 import { NewDrop } from '../sections/NewDrop'
-import { BrandWorlds } from '../sections/BrandWorlds'
+import { WhatsAppGroup } from '../sections/WhatsAppGroup'
 
-export function Home() { return <><Hero /><NewDrop /><Campaigns /><BrandWorlds /><FitnessHighlights /><PerfumeEssentials /><FinalCta /></> }
+export function Home() { return <div className="home-page"><Hero /><NewDrop /><PerfumeEssentials /><FitnessHighlights /><WhatsAppGroup /></div> }

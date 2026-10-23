@@ -83,6 +83,33 @@ A migration `phase_04_1_commerce_schema` prepara, sem inserir o catálogo atual:
 O arquivo atual `src/data/products.ts` continua sendo a fonte do catálogo visual.
 A migração de dados ocorrerá em uma fase posterior e não deve ser antecipada.
 
+### Convenções comerciais de códigos e SKUs
+
+- Streetwear usa códigos de produto `ST-01`, `ST-02`, etc.
+- SKU Streetwear segue `{CODIGO_PRODUTO}-{COR_ABREVIADA}-{TAMANHO}`.
+- Abreviações iniciais de cor: `MAR` = Marinho, `PTO` = Preto,
+  `BRA` = Branco e `BEG` = Bege. Novas abreviações exigem confirmação.
+- Perfumaria usa códigos próprios `PF-01`, `PF-02`, etc.
+- Apresentações de perfume são variantes e seguem
+  `{CODIGO_PRODUTO}-{VOLUME}`, como `PF-01-100ML`.
+- Somente tamanhos, cores e volumes comercialmente confirmados podem gerar SKU.
+
+Mapa comercial de Perfumaria aprovado para a Fase 04.3B:
+
+- `PF-01` Asad; `PF-02` Attar Al Wesal; `PF-03` Al Noble Wazeer; `PF-04` Bareeq Al Dhahab.
+- `PF-05` Odyssey Mandarin Sky; `PF-06` Club de Nuit Intense Man; `PF-07` Ameer Al Arab; `PF-08` Ishq Al Shuyukh Silver.
+- `PF-09` Fakhar Lattafa — Caixa Preta; `PF-10` Salvo; `PF-11` Queen of Arabia; `PF-12` Panther Pour Homme.
+- `PF-13` Mishlah; `PF-14` Fakhar Lattafa — Caixa Branca; `PF-15` Shagaf Al Ward; `PF-16` Yara.
+- `PF-17` Durrat Al Aroos; `PF-18` Ghala; `PF-19` Sabah Al Ward; `PF-20` Ameerat Al Arab.
+- `PF-21` Ameerat Al Arab Sugar Crown; `PF-22` Athena.
+
+O código não autoriza preencher dados ausentes. Perfumes sem fabricante ou volume confirmados permanecem bloqueados ou sem variante, conforme as constraints vigentes.
+
+Na Fase 04.3B.1, `products.brand = NULL` passou a representar exclusivamente
+fabricante ainda não informado. String vazia continua inválida. O Admin permite
+esse estado apenas para Perfumaria, exibe `Fabricante não informado` e mantém a
+marca obrigatória para Streetwear e Fitness.
+
 ### Administração e autorização
 
 Criar o usuário pelo Supabase Auth não concede administração automaticamente.

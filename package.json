@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:cloudflare": "tsc -b && vite build --mode cloudflare",
     "test": "tsx --test src/**/*.test.ts",
     "preview": "vite preview",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:reset": "supabase db reset",
     "supabase:test": "supabase test db",
-    "supabase:lint": "supabase db lint"
+    "supabase:lint": "supabase db lint",
+    "inventory:manifest:validate": "node scripts/validate-inventory-manifest.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.2",

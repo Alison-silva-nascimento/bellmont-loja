@@ -18,7 +18,23 @@ test('produto exige nome e slug e preserva preço ausente como null', () => {
   const invalid = normalizeProductForm(emptyProductForm())
   assert.equal(invalid.ok, false)
   const valid = normalizeProductForm({ ...emptyProductForm(), name: ' Teste ', slug: 'teste-dev' })
-  assert.deepEqual(valid, { ok: true, data: { code: null, name: 'Teste', slug: 'teste-dev', description: null, brand: 'bellmont', category: 'streetwear', subcategory: null, price: null, status: 'draft', featured: false } })
+  assert.deepEqual(valid, { ok: true, data: { code: null, name: 'Teste', slug: 'teste-dev', description: null, brand: 'bellmont', category: 'streetwear', subcategory: null, price: null, status: 'draft', sales_mode: 'INQUIRY_ONLY', featured: false } })
+})
+
+test('modalidade comercial é explícita e o padrão seguro é somente consulta', () => {
+  assert.equal(emptyProductForm().salesMode, 'INQUIRY_ONLY')
+  const assisted = normalizeProductForm({ ...emptyProductForm(), name: 'Camiseta', slug: 'camiseta', salesMode: 'ASSISTED_PURCHASE' })
+  assert.equal(assisted.ok && assisted.data.sales_mode, 'ASSISTED_PURCHASE')
+})
+
+test('permite fabricante ausente somente em Perfumaria', () => {
+  const perfume = normalizeProductForm({ ...emptyProductForm(), name: 'Perfume', slug: 'perfume', category: 'perfumes', brand: '' })
+  assert.equal(perfume.ok, true)
+  if (perfume.ok) assert.equal(perfume.data.brand, null)
+
+  const streetwear = normalizeProductForm({ ...emptyProductForm(), name: 'Camiseta', slug: 'camiseta', category: 'streetwear', brand: '' })
+  assert.equal(streetwear.ok, false)
+  if (!streetwear.ok) assert.equal(streetwear.errors.brand, 'Informe a marca deste produto.')
 })
 
 test('variante exige SKU e aceita opções genéricas sem inventar tamanhos', () => {
@@ -26,4 +42,3 @@ test('variante exige SKU e aceita opções genéricas sem inventar tamanhos', ()
   const result = normalizeVariantForm({ ...emptyVariantForm(), sku: ' TEST-M-BR ', size: 'M', color: 'Branca', options: '{"tecido":"algodão"}' })
   assert.deepEqual(result, { ok: true, data: { sku: 'TEST-M-BR', color: 'Branca', size: 'M', volume: null, price_override: null, options: { tecido: 'algodão' }, is_active: true } })
 })
-

@@ -1,6 +1,8 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { BrandMark } from '../ui/BrandMark'
+import { COMMERCIAL_CONTACTS, OFFICIAL_WHATSAPP_GROUP_URL } from '../../config/commercialMode'
+import { institutionalFooterLinks, PUBLIC_FOOTER_IDENTITY } from '../../data/institutionalPages'
 
 type MobileFooterGroup = {
   title: string
@@ -28,10 +30,16 @@ const mobileGroups: MobileFooterGroup[] = [
     title: 'AJUDA & INFORMAÇÕES',
     links: [
       { label: 'Contato', href: '/contato' },
+      { label: 'WhatsApp BELLMONT', href: COMMERCIAL_CONTACTS.bellmont.whatsappUrl, external: true },
+      { label: 'WhatsApp IMPÉRIO FIT', href: COMMERCIAL_CONTACTS['imperio-fit'].whatsappUrl, external: true },
+      { label: 'Grupo oficial BELLMONT', href: OFFICIAL_WHATSAPP_GROUP_URL, external: true },
       { label: 'Instagram BELLMONT', href: 'https://www.instagram.com/bellmontstoree?stkn=MWg5eG5uN3NncW52cw==', external: true },
       { label: 'Instagram IMPÉRIO FIT', href: 'https://www.instagram.com/imperio.fit.carolribeiro?stkn=ODZodzRjM3IzOTFm', external: true },
     ],
-    notes: ['WhatsApp — em breve', 'Privacidade — em breve'],
+  },
+  {
+    title: 'INSTITUCIONAL',
+    links: [...institutionalFooterLinks],
   },
 ]
 
@@ -41,9 +49,9 @@ export function Footer() {
     <div className="footer-grid footer-grid--desktop">
       <div><h3>BELLMONT / Shop</h3><Link to="/streetwear">Streetwear</Link><Link to="/perfumes">Perfumaria</Link><Link to="/produtos">Novidades</Link></div>
       <div><h3>IMPÉRIO FIT</h3><Link to="/imperio-fit">Fitness</Link><Link to="/imperio-fit">Performance</Link></div>
-      <div><h3>Atendimento</h3><Link to="/contato">Contato</Link><span>WhatsApp — em breve</span><span>Trocas — em breve</span></div>
-      <div><h3>Conecte-se</h3><a href="https://www.instagram.com/bellmontstoree?stkn=MWg5eG5uN3NncW52cw==" target="_blank" rel="noreferrer">Instagram BELLMONT <ArrowUpRight /></a><a href="https://www.instagram.com/imperio.fit.carolribeiro?stkn=ODZodzRjM3IzOTFm" target="_blank" rel="noreferrer">Instagram IMPÉRIO FIT <ArrowUpRight /></a><Link to="/contato">Fale com a BELLMONT <ArrowUpRight /></Link></div>
-      <div><h3>Institucional</h3><span>Privacidade — em breve</span><span>Informações legais — em breve</span></div>
+      <div><h3>Atendimento</h3><Link to="/contato">Todos os contatos</Link><a href={COMMERCIAL_CONTACTS.bellmont.whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp BELLMONT <ArrowUpRight /></a><a href={COMMERCIAL_CONTACTS['imperio-fit'].whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp IMPÉRIO FIT <ArrowUpRight /></a></div>
+      <div><h3>Conecte-se</h3><a href="https://www.instagram.com/bellmontstoree?stkn=MWg5eG5uN3NncW52cw==" target="_blank" rel="noopener noreferrer">Instagram BELLMONT <ArrowUpRight /></a><a href="https://www.instagram.com/imperio.fit.carolribeiro?stkn=ODZodzRjM3IzOTFm" target="_blank" rel="noopener noreferrer">Instagram IMPÉRIO FIT <ArrowUpRight /></a><a href={OFFICIAL_WHATSAPP_GROUP_URL} target="_blank" rel="noopener noreferrer">Grupo oficial BELLMONT <ArrowUpRight /></a></div>
+      <div><h3>Institucional</h3>{institutionalFooterLinks.map(link => <Link to={link.href} key={link.href}>{link.label}</Link>)}</div>
     </div>
     <div className="footer-accordion">
       {mobileGroups.map((group) => <details key={group.title}>
@@ -56,6 +64,7 @@ export function Footer() {
         </div>
       </details>)}
     </div>
+    <div className="footer-identity"><strong>{PUBLIC_FOOTER_IDENTITY.brand}</strong><span>{PUBLIC_FOOTER_IDENTITY.taxId}</span></div>
     <div className="footer-bottom"><span>© {new Date().getFullYear()} BELLMONT</span><a className="developer-credit" href="https://alison-silva-nascimento.github.io/Portifolio/" target="_blank" rel="noreferrer" aria-label="Portfólio de Alison Silva Nascimento">Desenvolvido por <strong>AS</strong></a><button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Voltar ao topo ↑</button></div>
   </footer>
 }

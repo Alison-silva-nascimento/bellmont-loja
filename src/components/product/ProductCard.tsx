@@ -1,7 +1,7 @@
 import { Eye, Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useFavorites } from '../../context/FavoritesContext'
-import { brandLabels, categoryLabels } from '../../data/products'
+import { brandLabels, categoryLabels } from '../../data/catalog'
 import type { Product } from '../../types/product'
 import { ImageStage } from '../ui/ImageStage'
 

@@ -3,7 +3,7 @@ begin;
 create extension if not exists pgtap with schema extensions;
 set search_path = public, extensions;
 
-select plan(37);
+select plan(38);
 
 select has_function(
   'public', 'apply_inventory_movement', array['bigint', 'bigint', 'text'],
@@ -195,8 +195,15 @@ select results_eq(
 );
 select throws_ok(
   $$update public.inventory_movements set note = 'tampered' where variant_id = (select id from public.product_variants where sku = 'TEST-INVENTORY-M')$$,
-  'P0001', 'inventory_movements is append-only', 'movement history remains append-only'
+  '42501', null, 'authenticated admin cannot update movement history directly'
 );
+reset role;
+select throws_ok(
+  $$update public.inventory_movements set note = 'tampered' where variant_id = (select id from public.product_variants where sku = 'TEST-INVENTORY-M')$$,
+  'P0001', 'inventory_movements is append-only', 'append-only trigger also blocks privileged direct updates'
+);
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000001","role":"authenticated"}', true);
 select results_eq(
   $$select movement_type from public.inventory_movements where variant_id = (select id from public.product_variants where sku = 'TEST-INVENTORY-M') order by id$$,
   array['initial'::text, 'adjustment'::text, 'adjustment'::text, 'adjustment'::text, 'adjustment'::text],

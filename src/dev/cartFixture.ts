@@ -8,6 +8,7 @@ export const devCartProduct: Product = {
   name: 'Camiseta DEV — Teste de Sacola',
   brand: 'bellmont',
   category: 'streetwear',
+  salesMode: 'ASSISTED_PURCHASE',
   price: 80,
   images: [asset('catalog-streetwear-goku-white.png')],
   colors: ['Branca'],

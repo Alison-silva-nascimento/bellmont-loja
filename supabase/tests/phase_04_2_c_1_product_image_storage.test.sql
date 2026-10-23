@@ -76,9 +76,9 @@ select throws_ok(
   $$insert into storage.objects (bucket_id, name) values ('product-images', 'other/1/550e8400-e29b-41d4-a716-446655440003.webp')$$,
   '42501', null, 'admin cannot upload outside the product path'
 );
-select lives_ok(
+select throws_ok(
   $$delete from storage.objects where name like 'products/%/550e8400-e29b-41d4-a716-446655440002.webp'$$,
-  'admin can delete from the product bucket'
+  '42501', null, 'direct Storage table deletion is rejected; deletion must use the Storage API'
 );
 select lives_ok(
   $$insert into public.product_images (product_id, storage_path, sort_order, is_primary) select id, 'products/' || id || '/550e8400-e29b-41d4-a716-446655440010.webp', 0, true from public.products where code='IMG-TEST'$$,
@@ -88,6 +88,10 @@ select throws_ok(
   $$insert into public.product_images (product_id, storage_path, sort_order, is_primary) select id, 'products/' || id || '/550e8400-e29b-41d4-a716-446655440011.webp', 1, true from public.products where code='IMG-TEST'$$,
   '23505', null, 'a product cannot have two primary images'
 );
+select throws_ok(
+  $$insert into public.product_images (product_id, storage_path) select id, '../escape.webp' from public.products where code='IMG-TEST'$$,
+  '23514', null, 'invalid and traversing paths are rejected'
+);
 select lives_ok(
   $$insert into public.product_images (product_id, storage_path, sort_order) select id, 'products/' || id || '/550e8400-e29b-41d4-a716-44665544001' || n || '.webp', n from public.products cross join generate_series(1,7) n where code='IMG-TEST'$$,
   'gallery accepts up to eight images'
@@ -95,10 +99,6 @@ select lives_ok(
 select throws_ok(
   $$insert into public.product_images (product_id, storage_path, sort_order) select id, 'products/' || id || '/550e8400-e29b-41d4-a716-446655440019.webp', 9 from public.products where code='IMG-TEST'$$,
   'P0001', 'PRODUCT_IMAGE_LIMIT_EXCEEDED', 'ninth image is rejected'
-);
-select throws_ok(
-  $$insert into public.product_images (product_id, storage_path) select id, '../escape.webp' from public.products where code='IMG-TEST'$$,
-  '23514', null, 'invalid and traversing paths are rejected'
 );
 select lives_ok(
   $$delete from public.product_images where is_primary and product_id=(select id from public.products where code='IMG-TEST')$$,
@@ -222,10 +222,9 @@ select results_eq(
   $$select id from storage.objects where false$$,
   'anon cannot update Storage objects'
 );
-select results_eq(
+select throws_ok(
   $$delete from storage.objects where bucket_id='product-images' returning id$$,
-  $$select id from storage.objects where false$$,
-  'anon cannot delete Storage objects'
+  '42501', null, 'anon cannot delete Storage objects directly'
 );
 
 reset role;
@@ -246,18 +245,17 @@ select results_eq(
   $$select id from storage.objects where false$$,
   'authenticated non-admin cannot update Storage objects'
 );
-select results_eq(
+select throws_ok(
   $$delete from storage.objects where bucket_id='product-images' returning id$$,
-  $$select id from storage.objects where false$$,
-  'authenticated non-admin cannot delete Storage objects'
+  '42501', null, 'authenticated non-admin cannot delete Storage objects directly'
 );
 
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"20000000-0000-0000-0000-000000000001","role":"authenticated"}', true);
-select lives_ok(
+select throws_ok(
   $$delete from storage.objects where bucket_id='product-images' and name like '%440107.webp'$$,
-  'admin can delete a canonical Storage object'
+  '42501', null, 'admin direct deletion is rejected; canonical deletion uses the Storage API'
 );
 select results_eq(
   $$select count(*) from public.product_images where product_id=(select id from public.products where code='IMG-TEST')$$,
