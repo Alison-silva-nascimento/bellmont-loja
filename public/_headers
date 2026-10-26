@@ -1,0 +1,17 @@
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/dev/*
+  X-Robots-Tag: noindex, nofollow
+
+/checkout/*
+  X-Robots-Tag: noindex, nofollow
+
+/buscar
+  X-Robots-Tag: noindex, nofollow
+
+/favoritos
+  X-Robots-Tag: noindex, nofollow
+
+/sacola
+  X-Robots-Tag: noindex, nofollow

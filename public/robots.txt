@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /dev/
+Disallow: /checkout/
+Disallow: /buscar
+Disallow: /favoritos
+Disallow: /sacola
 
-Sitemap: /sitemap.xml
+Sitemap: https://bellmontloja.com.br/sitemap.xml

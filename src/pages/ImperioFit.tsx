@@ -4,7 +4,7 @@ import { ProductCard } from '../components/product/ProductCard'
 import { QuickView } from '../components/commerce/QuickView'
 import { useCatalog } from '../context/CatalogContext'
 import type { Product } from '../types/product'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { asset } from '../utils/asset'
 import { WhatsAppContactLink } from '../components/commerce/WhatsAppContactLink'
 
@@ -12,7 +12,6 @@ export function ImperioFit() {
   const [selected, setSelected] = useState<Product | null>(null)
   const { products } = useCatalog()
   const fitness = products.filter(product => product.brand === 'imperio-fit')
-  useEffect(() => { const previous = document.title; document.title = 'IMPÉRIO FIT — Fitness & Performance'; return () => { document.title = previous } }, [])
   return <div className="imperio-fit-page">
     <section className="fit-hero"><picture><source media="(max-width: 767px)" srcSet={asset('imperio-fit-hero-performance-mobile.png')} /><img src={asset('imperio-fit-hero-performance-desktop.png')} alt="Atleta em editorial de performance IMPÉRIO FIT" fetchPriority="high" /></picture><div className="fit-hero__shade" /><div className="fit-hero__copy"><p>IMPÉRIO FIT / FITNESS PREMIUM</p><h1>FORÇA EM<br /><em>MOVIMENTO.</em></h1><a href="#colecao">Ver coleção <ArrowDownRight /></a></div></section>
     <section className="fit-manifesto"><span>FITNESS / PERFORMANCE / FASHION</span><p>Fitness premium para treinar, viver e vestir com confiança.</p></section>
