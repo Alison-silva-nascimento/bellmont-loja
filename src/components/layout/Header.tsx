@@ -18,7 +18,7 @@ export function Header() {
     <header className={`site-header ${overlay && !scrolled ? 'site-header--overlay' : ''} ${scrolled ? 'site-header--solid' : ''}`}>
       <div className="header-desktop">
         <nav className="header-nav header-nav--left" aria-label="Categorias">
-          <Link to="/streetwear">Streetwear</Link><Link className="header-brand-link" to="/imperio-fit">Império Fit</Link><Link to="/perfumes">Perfumaria</Link>
+          <Link to="/streetwear">Streetwear</Link><Link className="header-brand-link" to="/imperio-fit">Fitness</Link><Link to="/perfumes">Fragrances</Link>
         </nav>
         <BrandMark brand={isImperioFit ? 'imperio-fit' : 'bellmont'} light={overlay && !scrolled} />
         <nav className="header-nav header-nav--right" aria-label="Ações">

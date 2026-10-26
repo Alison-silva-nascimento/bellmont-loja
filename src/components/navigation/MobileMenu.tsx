@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useLockBody } from '../../hooks/useLockBody'
 
-const links = [['STREETWEAR','/streetwear'], ['PERFUMARIA','/perfumes'], ['IMPÉRIO FIT','/imperio-fit'], ['NOVIDADES','/produtos'], ['FAVORITOS','/favoritos'], ['CONTATO','/contato']]
+const links = [['STREETWEAR','/streetwear'], ['FITNESS','/imperio-fit'], ['FRAGRANCES','/perfumes'], ['NOVIDADES','/produtos'], ['FAVORITOS','/favoritos'], ['CONTATO','/contato']]
 
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   useLockBody(open)
