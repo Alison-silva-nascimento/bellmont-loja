@@ -8,9 +8,12 @@ export const COMMERCIAL_MODES = {
 export type CommercialMode = typeof COMMERCIAL_MODES[keyof typeof COMMERCIAL_MODES]
 export type CommerceOwner = 'bellmont' | 'imperio-fit'
 
+const viteEnv = (import.meta as unknown as { env?: ImportMetaEnv }).env
+
 // ONLINE_CHECKOUT remains deliberately unavailable until a future, explicit release.
 export const COMMERCIAL_MODE: CommercialMode = COMMERCIAL_MODES.WHATSAPP_ONLY
 export const ONLINE_CHECKOUT_AVAILABLE = false
+export const V2_CHECKOUT_ENABLED = ONLINE_CHECKOUT_AVAILABLE && viteEnv?.VITE_ENABLE_V2_CHECKOUT === 'true'
 
 export const COMMERCIAL_CONTACTS = {
   bellmont: {

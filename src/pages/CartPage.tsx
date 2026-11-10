@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { brandLabels, categoryLabels } from '../data/catalog'
 import { CART_MAX_QUANTITY, getVariantQuantityLimit, hasExactVariantStock, isBellmontPerfumeEligibleForWhatsAppCart } from '../utils/cart'
-import { COMMERCIAL_CONTACTS, COMMERCIAL_MODE, COMMERCIAL_MODES } from '../config/commercialMode'
+import { COMMERCIAL_CONTACTS, COMMERCIAL_MODE, COMMERCIAL_MODES, V2_CHECKOUT_ENABLED } from '../config/commercialMode'
 import { groupCartItemsByCommerceOwner } from '../utils/whatsappOrder'
 
 const formatPrice = (price: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price)
@@ -41,7 +41,7 @@ export function CartPage() {
           {mixedStores && <p>Há itens de duas lojas. Envie cada seleção ao atendimento responsável; as condições serão confirmadas separadamente.</p>}
           {whatsappGroups.map(group => <a className="button button--whatsapp" href={group.url} target="_blank" rel="noopener noreferrer" key={group.owner}><MessageCircle aria-hidden="true" />{mixedStores ? `Enviar pedido à ${COMMERCIAL_CONTACTS[group.owner].label}` : `Finalizar com ${COMMERCIAL_CONTACTS[group.owner].label}`}</a>)}
         </div>}
-        <p id="checkout-unavailable" className="cart-summary__notice">Compra online ainda indisponível. Nenhum pedido, reserva, movimentação de estoque ou pagamento será criado ao usar estes botões.</p><Link className="text-link" to="/streetwear">Continuar comprando</Link></aside>
+        {V2_CHECKOUT_ENABLED && <Link className="button button--dark" to="/checkout">Continuar para checkout V2</Link>}<p id="checkout-unavailable" className="cart-summary__notice">{V2_CHECKOUT_ENABLED ? 'Checkout V2 em homologação: o pagamento permanece bloqueado até frete e backend estarem configurados.' : 'Compra online ainda indisponível. Nenhum pedido, reserva, movimentação de estoque ou pagamento será criado ao usar estes botões.'}</p><Link className="text-link" to="/streetwear">Continuar comprando</Link></aside>
     </div>
     {COMMERCIAL_MODE === COMMERCIAL_MODES.WHATSAPP_ONLY && whatsappGroups.length > 0 && <aside className={`cart-mobile-checkout${mixedStores ? ' cart-mobile-checkout--mixed' : ''}`} aria-label="Acesso rápido à finalização por WhatsApp">
       <div><span>{hasUnknownPrice ? 'Subtotal conhecido' : 'Subtotal'}</span><strong>{formatPrice(subtotal)}</strong></div>

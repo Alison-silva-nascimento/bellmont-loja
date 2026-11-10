@@ -302,7 +302,14 @@ export type Database = {
           order_id: number
           provider: string
           external_transaction_id: string | null
-          payment_method: 'pix' | 'credit_card' | 'manual'
+          external_preference_id: string | null
+          external_order_id: string | null
+          provider_idempotency_key: string | null
+          checkout_url: string | null
+          provider_status: string | null
+          provider_status_detail: string | null
+          provider_updated_at: string | null
+          payment_method: 'pix' | 'credit_card' | 'manual' | 'checkout_pro'
           amount_requested: number
           amount_confirmed: number
           status: 'pending' | 'authorized' | 'paid' | 'failed' | 'cancelled' | 'partially_refunded' | 'refunded'
@@ -316,7 +323,14 @@ export type Database = {
           order_id: number
           provider: string
           external_transaction_id?: string | null
-          payment_method: 'pix' | 'credit_card' | 'manual'
+          external_preference_id?: string | null
+          external_order_id?: string | null
+          provider_idempotency_key?: string | null
+          checkout_url?: string | null
+          provider_status?: string | null
+          provider_status_detail?: string | null
+          provider_updated_at?: string | null
+          payment_method: 'pix' | 'credit_card' | 'manual' | 'checkout_pro'
           amount_requested: number
           amount_confirmed?: number
           status?: 'pending' | 'authorized' | 'paid' | 'failed' | 'cancelled' | 'partially_refunded' | 'refunded'
